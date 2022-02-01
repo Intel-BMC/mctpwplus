@@ -119,10 +119,10 @@ int onInterfacesAdded(sd_bus_message* rawMsg, void* userData,
         {
             event.eid = getEIdFromPath(object_path);
             const auto& properties = itSupportedMsgTypes->second;
-            const auto& pldmSupport =
+            const auto& registeredMsgType =
                 properties.at(mctpw::MCTPImpl::msgTypeToPropertyName.at(
                     context->config.type));
-            if (std::get<bool>(pldmSupport))
+            if (std::get<bool>(registeredMsgType))
             {
                 event.type = mctpw::Event::EventType::deviceAdded;
                 boost::asio::spawn([context, object_path, serviceName, userData,
