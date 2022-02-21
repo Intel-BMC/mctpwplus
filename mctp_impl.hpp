@@ -223,6 +223,7 @@ class MCTPImpl
                      const std::string& serviceName/*, uint16_t vid,
                      uint16_t vmsgType*/);
     size_t eraseDevice(eid_t eid);
+    std::optional<std::string> getDeviceLocation(const eid_t eid);
 
   private:
     std::unordered_map<

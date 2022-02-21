@@ -335,6 +335,18 @@ class MCTPWrapper
         sendYield(boost::asio::yield_context& yield, const eid_t dstEId,
                   const uint8_t msgTag, const bool tagOwner,
                   const ByteArray& request);
+
+    /**
+     * @brief Get human-readable device location string by EID
+     *
+     * When device location string is not available or it is an empty string,
+     * will return std::nullopt.
+     *
+     * @param eid MCTP Endpoint ID of the device to query
+     * @return std::optional<std::string> Optional device location string
+     */
+    std::optional<std::string> getDeviceLocation(const eid_t eid);
+
     /// MCTP Configuration to store message type and vendor defined properties
     MCTPConfiguration config{};
 

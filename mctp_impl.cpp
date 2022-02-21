@@ -598,6 +598,37 @@ size_t MCTPImpl::eraseDevice(eid_t eid)
     return endpointMap.erase(eid);
 }
 
+std::optional<std::string> MCTPImpl::getDeviceLocation(const eid_t eid)
+{
+    auto it = this->endpointMap.find(eid);
+    if (it == this->endpointMap.end())
+    {
+        phosphor::logging::log<phosphor::logging::level::ERR>(
+            "getDeviceLocation: Eid not found in end point map",
+            phosphor::logging::entry("EID=%d", eid));
+        return std::nullopt;
+    }
+
+    try
+    {
+        auto locationCode = readPropertyValue<std::string>(
+            static_cast<sdbusplus::bus::bus&>(*connection), it->second.second,
+            "/xyz/openbmc_project/mctp/device/" + std::to_string(eid),
+            "xyz.openbmc_project.Inventory.Decorator.LocationCode",
+            "LocationCode");
+        return locationCode.empty() ? std::nullopt
+                                    : std::make_optional(locationCode);
+    }
+    catch (const std::exception& e)
+    {
+        phosphor::logging::log<phosphor::logging::level::ERR>(
+            ("Error in getting Physical.Location property from " +
+             it->second.second + ". " + e.what())
+                .c_str());
+        return std::nullopt;
+    }
+}
+
 void MCTPImpl::listenForNewMctpServices()
 {
     static const std::string matchRule =

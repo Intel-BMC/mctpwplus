@@ -149,3 +149,8 @@ int MCTPWrapper::releaseBandwidth(boost::asio::yield_context yield,
 {
     return pimpl->releaseBandwidth(yield, dstEId);
 }
+
+std::optional<std::string> MCTPWrapper::getDeviceLocation(const eid_t eid)
+{
+    return pimpl->getDeviceLocation(eid);
+}
