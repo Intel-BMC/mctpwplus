@@ -115,7 +115,7 @@ them. Filter them based on given message type. And populate endpoint list.
 MCTPWrapper will know how to send payload to an EID only after this API is
 called.
 ```cpp
-boost::asio::spawn(
+boost::asio::spawn(io,
 [&mctpWrapper](boost::asio::yield_context yield) {
     auto ec = mctpWrapper.detectMctpEndpoints(yield);
     auto epMap = mctpWrapper.getEndpointMap();

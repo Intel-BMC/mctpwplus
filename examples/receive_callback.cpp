@@ -55,8 +55,8 @@ int main(int argc, char* argv[])
         }
         std::cout << "Send status async " << status << '\n';
     };
-    auto registerCB = [eid, sendCB, &mctpWrapper](boost::system::error_code ec,
-                                                  void*) {
+    auto registerCB = [eid, sendCB, &mctpWrapper,
+                       &io](boost::system::error_code ec, void*) {
         if (ec)
         {
             std::cout << "Error" << ec.message() << std::endl;
@@ -75,8 +75,8 @@ int main(int argc, char* argv[])
         std::vector<uint8_t> request = {1, 143, 0, 3, 0, 0, 0, 0, 1, 0};
         mctpWrapper.sendAsync(sendCB, eid, 0, false, request);
 
-        boost::asio::spawn([&mctpWrapper,
-                            eid](boost::asio::yield_context yield) {
+        boost::asio::spawn(io, [&mctpWrapper,
+                                eid](boost::asio::yield_context yield) {
             // GetUID request
             std::vector<uint8_t> request2 = {1, 143, 2, 3};
             std::vector<uint8_t> response;

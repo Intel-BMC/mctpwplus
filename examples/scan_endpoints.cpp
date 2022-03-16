@@ -47,7 +47,7 @@ int main(int argc, char*[])
     if (useYield)
     {
         boost::asio::spawn(
-            [&mctpWrapper, &printEPMap](boost::asio::yield_context yield) {
+            io, [&mctpWrapper, &printEPMap](boost::asio::yield_context yield) {
                 mctpWrapper.detectMctpEndpoints(yield);
                 printEPMap();
             });

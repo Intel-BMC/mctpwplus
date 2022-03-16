@@ -125,12 +125,14 @@ int onInterfacesAdded(sd_bus_message* rawMsg, void* userData,
             if (std::get<bool>(registeredMsgType))
             {
                 event.type = mctpw::Event::EventType::deviceAdded;
-                boost::asio::spawn([context, object_path, serviceName, userData,
+                boost::asio::spawn(context->connection->get_io_context(),
+                                   [context, object_path, serviceName, userData,
                                     event](boost::asio::yield_context yield) {
-                    context->addToEidMap(yield, serviceName);
-                    context->networkChangeCallback(userData, event, yield);
-                    return 1;
-                });
+                                       context->addToEidMap(yield, serviceName);
+                                       context->networkChangeCallback(
+                                           userData, event, yield);
+                                       return 1;
+                                   });
             }
         }
     }
@@ -172,11 +174,13 @@ int onInterfacesRemoved(sd_bus_message* rawMsg, void* userData,
             event.eid = getEIdFromPath(object_path);
             if (context->eraseDevice(event.eid) == 1)
             {
-                boost::asio::spawn([context, userData,
+                boost::asio::spawn(context->connection->get_io_context(),
+                                   [context, userData,
                                     event](boost::asio::yield_context yield) {
-                    context->networkChangeCallback(userData, event, yield);
-                    return 1;
-                });
+                                       context->networkChangeCallback(
+                                           userData, event, yield);
+                                       return 1;
+                                   });
             }
             else
             {
