@@ -20,20 +20,23 @@ So the implementation is not a concern to the developer. Developer can focus
 on the application logic and implement it.
 
 ## Building
-This library uses CMake as build system. The build is tested only on Ubuntu
+This library uses meson as build system. The build is tested only on Ubuntu
  18.04.
 
-Create a build subdirectory and execute the cmake command.
+Execute this command to create a build subdirectory and setup meson
 ```
-cmake -DYOCTO_DEPENDENCIES=OFF -DBUILD_EXAMPLES=ON ../
+meson setup build -Dexamples=enabled
 ```
 This will fetch and build prequisites if needed including boost sdbusplus
  etc. Then make the library using
 ```
-make
+meson compile -C build -v
 ```
 The output is libcmtpwplus.so which can be linked against applications that
 wish to use MCTP for communication.
+
+There is also one variant of the library libmctpwplus-nothread.so which use
+-DBOOST_ASIO_DISABLE_THREADS for building.
 
 ## Example
 The main class provided by mctpwplus is MCTPWrapper. The object of this
