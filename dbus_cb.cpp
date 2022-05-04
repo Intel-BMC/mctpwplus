@@ -231,8 +231,9 @@ int onMessageReceivedSignal(sd_bus_message* rawMsg, void* userData,
         {
             struct VendorHeader
             {
+                uint8_t vdpciMessageType;
                 uint16_t vendorId;
-                uint16_t vendorMessageId;
+                uint16_t intelVendorMessageId;
             } __attribute__((packed));
             VendorHeader* vendorHdr =
                 reinterpret_cast<VendorHeader*>(payload.data());
@@ -240,9 +241,10 @@ int onMessageReceivedSignal(sd_bus_message* rawMsg, void* userData,
             if (!context->config.vendorId ||
                 !context->config.vendorMessageType ||
                 (vendorHdr->vendorId != context->config.vendorId) ||
-                ((vendorHdr->vendorMessageId &
+                ((vendorHdr->intelVendorMessageId &
                   context->config.vendorMessageType->mask) !=
-                 context->config.vendorMessageType->mask))
+                 (context->config.vendorMessageType->value &
+                 context->config.vendorMessageType->mask)))
             {
                 return -1;
             }
