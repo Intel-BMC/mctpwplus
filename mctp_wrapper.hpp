@@ -355,7 +355,7 @@ class MCTPWrapper
                                  {MessageType::ncsi, "NCSI"},
                                  {MessageType::ethernet, "Ethernet"},
                                  {MessageType::nvmeMgmtMsg, "NVMeMgmtMsg"},
-                                 {MessageType::spdm, "SPDM "},
+                                 {MessageType::spdm, "SPDM"},
                                  {MessageType::securedMsg, "SECUREDMSG"},
                                  {MessageType::vdpci, "VDPCI"},
                                  {MessageType::vdiana, "VDIANA"}};
