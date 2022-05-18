@@ -113,6 +113,13 @@ std::pair<boost::system::error_code, ByteArray>
     return receiveResult;
 }
 
+std::pair<boost::system::error_code, ByteArray>
+    MCTPWrapper::sendReceiveBlocked(eid_t dstEId, const ByteArray& request,
+                                    std::chrono::milliseconds timeout)
+{
+    return pimpl->sendReceiveBlocked(dstEId, request, timeout);
+}
+
 void MCTPWrapper::sendAsync(const SendCallback& callback, const eid_t dstEId,
                             const uint8_t msgTag, const bool tagOwner,
                             const ByteArray& request)

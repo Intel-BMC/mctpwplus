@@ -532,6 +532,47 @@ std::pair<boost::system::error_code, ByteArray>
     return receiveResult;
 }
 
+std::pair<boost::system::error_code, ByteArray>
+    MCTPImpl::sendReceiveBlocked(eid_t dstEId, const ByteArray& request,
+                                 std::chrono::milliseconds timeout)
+{
+    auto receiveResult = std::make_pair(
+        boost::system::errc::make_error_code(boost::system::errc::success),
+        ByteArray());
+    auto it = this->endpointMap.find(dstEId);
+    if (this->endpointMap.end() == it)
+    {
+        phosphor::logging::log<phosphor::logging::level::ERR>(
+            "SendReceiveBlocked: Eid not found in end point map",
+            phosphor::logging::entry("EID=%d", dstEId));
+        receiveResult.first =
+            boost::system::errc::make_error_code(boost::system::errc::io_error);
+        return receiveResult;
+    }
+
+    auto msg = connection->new_method_call(
+        it->second.second.c_str(), "/xyz/openbmc_project/mctp",
+        "xyz.openbmc_project.MCTP.Base", "SendReceiveMctpMessagePayload");
+
+    msg.append(dstEId);
+    msg.append(request);
+    msg.append(static_cast<uint16_t>(timeout.count()));
+
+    auto reply = connection->call(msg);
+    if (reply.is_method_error())
+    {
+        phosphor::logging::log<phosphor::logging::level::ERR>(
+            "SendReceiveBlocked: Error in method call ",
+            phosphor::logging::entry("EID=%d", dstEId));
+        receiveResult.first =
+            boost::system::errc::make_error_code(boost::system::errc::io_error);
+        return receiveResult;
+    }
+    reply.read(receiveResult.second);
+
+    return receiveResult;
+}
+
 void MCTPImpl::sendAsync(const SendCallback& callback, const eid_t dstEId,
                          const uint8_t msgTag, const bool tagOwner,
                          const ByteArray& request)

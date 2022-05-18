@@ -304,6 +304,19 @@ class MCTPWrapper
         sendReceiveYield(boost::asio::yield_context yield, eid_t dstEId,
                          const ByteArray& request,
                          std::chrono::milliseconds timeout);
+
+    /**
+     * @brief Send request to dstEId and receive response using
+     * a blocked call
+     * @param dstEId Destination MCTP Endpoint ID
+     * @param request MCTP request byte array
+     * @param timeout MCTP receive timeout
+     * @return std::pair<boost::system::error_code, ByteArray> Pair of boost
+     * error code and response byte array
+     */
+    std::pair<boost::system::error_code, ByteArray>
+        sendReceiveBlocked(eid_t dstEId, const ByteArray& request,
+                           std::chrono::milliseconds timeout);
     /**
      * @brief Send MCTP request to dstEId and receive status of send operation
      * in callback

@@ -188,6 +188,19 @@ class MCTPImpl
                          const ByteArray& request,
                          std::chrono::milliseconds timeout);
     /**
+     * @brief Send request to dstEId and receive response using blocked
+     * calls     *
+     * @param yield Boost yield_context to use on dbus call
+     * @param dstEId Destination MCTP Endpoint ID
+     * @param request MCTP request byte array
+     * @param timeout MCTP receive timeout
+     * @return std::pair<boost::system::error_code, ByteArray> Pair of boost
+     * error code and response byte array
+     */
+    std::pair<boost::system::error_code, ByteArray>
+        sendReceiveBlocked(eid_t dstEId, const ByteArray& request,
+                           std::chrono::milliseconds timeout);
+    /**
      * @brief Send MCTP request to dstEId and receive status of send operation
      * in callback
      *
